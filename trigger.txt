@@ -1,0 +1,214 @@
+Enter password: *********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 12
+Server version: 8.0.40 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> DELIMITER //
+mysql>
+mysql> CREATE TRIGGER before_library_update
+    -> BEFORE UPDATE ON library
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     INSERT INTO library_audit (old_book_id, old_book_name, old_author_name, old_price, operation_type)
+    ->     VALUES (book_id, book_name, author_name, price, 'update');
+    -> END //
+ERROR 1046 (3D000): No database selected
+mysql>
+mysql> DELIMITER ;
+mysql> use mysql
+Database changed
+mysql> DELIMITER //
+mysql>
+mysql> CREATE TRIGGER before_library_update
+    -> BEFORE UPDATE ON library
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     INSERT INTO library_audit (old_book_id, old_book_name, old_author_name, old_price, operation_type)
+    ->     VALUES (book_id, book_name, author_name, price, 'update');
+    -> END //
+ERROR 1465 (HY000): Triggers can not be created on system tables
+mysql>
+mysql> DELIMITER ;
+mysql> desc library;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| book_id     | int         | NO   | PRI | NULL    |       |
+| book_name   | varchar(25) | YES  |     | NULL    |       |
+| author_name | varchar(40) | YES  |     | NULL    |       |
+| price       | int         | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> desc library_audit;
++-----------------+-------------+------+-----+---------+-------+
+| Field           | Type        | Null | Key | Default | Extra |
++-----------------+-------------+------+-----+---------+-------+
+| old_book_id     | int         | NO   | PRI | NULL    |       |
+| old_book_name   | varchar(25) | YES  |     | NULL    |       |
+| old_author_name | varchar(40) | YES  |     | NULL    |       |
+| old_price       | int         | YES  |     | NULL    |       |
+| operation_type  | varchar(20) | YES  |     | NULL    |       |
++-----------------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> use Gaurav;
+ERROR 1049 (42000): Unknown database 'gaurav'
+mysql> create database Gaurav;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use Gaurav;
+Database changed
+mysql> create table library(
+    -> book_id int primary key,
+    -> book_name varchar(25),
+    -> author_name varchar(40),
+    -> price int
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> insert into library values(1,'early india','ramila thapar',1200);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into library values(2,'verity','collen hoover',1600);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into library values(3,'Nelson mandela','Hovely reads',900);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into library values(4,'everyday gita','sunita pant',1500);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into library values(5,'b1','a1',2000);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> create table library_audit(
+    -> old_book_id int primary key,
+    -> old_book_name varchar(25),
+    -> old_author_name varchar(40),
+    -> old_price int,
+    -> operation_type varchar(20)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> DELIMITER //
+mysql>
+mysql> CREATE TRIGGER before_library_update
+    -> BEFORE UPDATE ON library
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     INSERT INTO library_audit (old_book_id, old_book_name, old_author_name, old_price, operation_type)
+    ->     VALUES (book_id, book_name, author_name, price, 'update');
+    -> END //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+mysql> DELIMITER ;
+mysql> UPDATE Library SET book_name = 'Gatsby (Updated)', author_name = 'Fitzgerald' WHERE book_id = 1;
+ERROR 1054 (42S22): Unknown column 'book_id' in 'field list'
+mysql> UPDATE Library SET book_name = 'Gatsby (Updated)', author_name = 'Fitzgerald' WHERE book_id = 1;
+ERROR 1054 (42S22): Unknown column 'book_id' in 'field list'
+mysql> select * from library;
++---------+----------------+---------------+-------+
+| book_id | book_name      | author_name   | price |
++---------+----------------+---------------+-------+
+|       1 | early india    | ramila thapar |  1200 |
+|       2 | verity         | collen hoover |  1600 |
+|       3 | Nelson mandela | Hovely reads  |   900 |
+|       4 | everyday gita  | sunita pant   |  1500 |
+|       5 | b1             | a1            |  2000 |
++---------+----------------+---------------+-------+
+5 rows in set (0.00 sec)
+
+mysql> UPDATE library SET book_name = 'Gatsby (Updated)', author_name = 'Fitzgerald' WHERE book_id = 1;
+ERROR 1054 (42S22): Unknown column 'book_id' in 'field list'
+mysql> UPDATE library SET book_name = 'Gatsby (Updated)', author_name = 'Fitzgerald' WHERE price = 1200;
+ERROR 1054 (42S22): Unknown column 'book_id' in 'field list'
+mysql> DESCRIBE library;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| book_id     | int         | NO   | PRI | NULL    |       |
+| book_name   | varchar(25) | YES  |     | NULL    |       |
+| author_name | varchar(40) | YES  |     | NULL    |       |
+| price       | int         | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> UPDATE library SET book_name = 'Gatsby (Updated)', author_name = 'Fitzgerald' WHERE price = 1200;
+ERROR 1054 (42S22): Unknown column 'book_id' in 'field list'
+mysql> UPDATE library SET book_name = 'Gatsby (Updated)', author_name = 'Fitzgerald' WHERE book_id = 2;
+ERROR 1054 (42S22): Unknown column 'book_id' in 'field list'
+mysql> DELIMITER //
+mysql> CREATE TRIGGER before_library_delete
+    -> BEFORE DELETE ON library
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     INSERT INTO library_audit (old_book_id, old_book_name, old_author_name, old_price, operation_type)
+    ->     VALUES (OLD.book_id, OLD.book_name, OLD.author_name, OLD.price, 'delete');
+    -> END //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+mysql> DELIMITER ;
+mysql>
+mysql> DELETE FROM Library WHERE book_id = 2;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from library_audit;
++-------------+---------------+-----------------+-----------+----------------+
+| old_book_id | old_book_name | old_author_name | old_price | operation_type |
++-------------+---------------+-----------------+-----------+----------------+
+|           2 | verity        | collen hoover   |      1600 | delete         |
++-------------+---------------+-----------------+-----------+----------------+
+1 row in set (0.00 sec)
+
+mysql> select * from library;
++---------+----------------+---------------+-------+
+| book_id | book_name      | author_name   | price |
++---------+----------------+---------------+-------+
+|       1 | early india    | ramila thapar |  1200 |
+|       3 | Nelson mandela | Hovely reads  |   900 |
+|       4 | everyday gita  | sunita pant   |  1500 |
+|       5 | b1             | a1            |  2000 |
++---------+----------------+---------------+-------+
+4 rows in set (0.00 sec)
+
+mysql> UPDATE library SET book_name = 'Gatsby (Updated)' WHERE book_id = 2;
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+mysql> select * from library_audit;
++-------------+---------------+-----------------+-----------+----------------+
+| old_book_id | old_book_name | old_author_name | old_price | operation_type |
++-------------+---------------+-----------------+-----------+----------------+
+|           2 | verity        | collen hoover   |      1600 | delete         |
++-------------+---------------+-----------------+-----------+----------------+
+1 row in set (0.00 sec)
+
+mysql> select * from library;
++---------+----------------+---------------+-------+
+| book_id | book_name      | author_name   | price |
++---------+----------------+---------------+-------+
+|       1 | early india    | ramila thapar |  1200 |
+|       3 | Nelson mandela | Hovely reads  |   900 |
+|       4 | everyday gita  | sunita pant   |  1500 |
+|       5 | b1             | a1            |  2000 |
++---------+----------------+---------------+-------+
+4 rows in set (0.00 sec)
+
+mysql> UPDATE library SET book_name = 'Gatsby (Updated)' WHERE book_id = 1;
+ERROR 1054 (42S22): Unknown column 'book_id' in 'field list'
+mysql> UPDATE library SET book_name = 'Gatsby (Updated)' WHERE Book_ID = 1;
+ERROR 1054 (42S22): Unknown column 'book_id' in 'field list'
+mysql> UPDATE library SET book_name = 'Gatsby (Updated)' WHERE author_name = 'ramila thapar';
+ERROR 1054 (42S22): Unknown column 'book_id' in 'field list'
+mysql>
