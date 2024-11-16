@@ -1,0 +1,198 @@
+Enter password: *********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 15
+Server version: 8.0.40 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use mysql
+Database changed
+mysql> desc stud_marks;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| name        | varchar(20) | YES  |     | NULL    |       |
+| total_marks | int         | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql> desc result;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| roll  | int         | YES  |     | NULL    |       |
+| name  | varchar(20) | YES  |     | NULL    |       |
+| class | varchar(30) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> delimiter //
+
+mysql> CREATE TABLE result (
+    ->     roll_number INT,
+    ->     name VARCHAR(25),
+    ->     class VARCHAR(30)
+    -> );
+    -> //
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> desc result;
+    -> //
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| roll_number | int         | YES  |     | NULL    |       |
+| name        | varchar(25) | YES  |     | NULL    |       |
+| class       | varchar(30) | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> CREATE PROCEDURE proc_grades(
+    ->     roll_no INT,
+    ->     name VARCHAR(25),
+    ->     marks INT
+    -> )
+    -> BEGIN
+    ->     DECLARE result_class VARCHAR(30);
+    ->
+    ->     IF marks BETWEEN 990 AND 1500 THEN
+    ->         SET result_class = 'DISTINCTION';
+    ->         SELECT CONCAT(roll_no, ' - ', name, ' : DISTINCTION') AS Result;
+    ->     ELSEIF marks BETWEEN 900 AND 989 THEN
+    ->         SET result_class = 'FIRST CLASS';
+    ->         SELECT CONCAT(roll_no, ' - ', name, ' : FIRST CLASS') AS Result;
+    ->     ELSEIF marks BETWEEN 826 AND 899 THEN
+    ->         SET result_class = 'HIGHER SECOND CLASS';
+    ->         SELECT CONCAT(roll_no, ' - ', name, ' : HIGHER SECOND CLASS') AS Result;
+    ->     ELSE
+    ->         SET result_class = 'FAIL';
+    ->         SELECT CONCAT(roll_no, ' - ', name, ' : FAIL') AS Result;
+    ->     END IF;
+    ->
+    ->     INSERT INTO result (roll_number, name, class)
+    ->     VALUES (roll_no, name, result_class);
+    ->
+    ->     INSERT INTO stud_marks (name, total_marks)
+    ->     VALUES (name, marks);
+    -> END //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CALL proc_grades(54, 'SUDARSHAN', 1000);
+    -> CALL proc_grades(46, 'ARYAN', 950);
+    -> CALL proc_grades(58, 'ARJUN', 1050);
+    -> CALL proc_grades(14, 'Aanika', 995);
+    -> CALL proc_grades(19, 'Suhani', 889);
+    -> CALL proc_grades(16, 'Kartiki', 965);
+    -> CALL proc_grades(10, 'Shalima', 400);
+    -> CALL proc_grades(20, 'Kusum', 777);
+    -> //
++------------------------------+
+| Result                       |
++------------------------------+
+| 54 - SUDARSHAN : DISTINCTION |
++------------------------------+
+1 row in set (0.00 sec)
+
+Query OK, 1 row affected (0.01 sec)
+
++--------------------------+
+| Result                   |
++--------------------------+
+| 46 - ARYAN : FIRST CLASS |
++--------------------------+
+1 row in set (0.01 sec)
+
+Query OK, 1 row affected (0.02 sec)
+
++--------------------------+
+| Result                   |
++--------------------------+
+| 58 - ARJUN : DISTINCTION |
++--------------------------+
+1 row in set (0.02 sec)
+
+Query OK, 1 row affected (0.03 sec)
+
++---------------------------+
+| Result                    |
++---------------------------+
+| 14 - Aanika : DISTINCTION |
++---------------------------+
+1 row in set (0.03 sec)
+
+Query OK, 1 row affected (0.04 sec)
+
++-----------------------------------+
+| Result                            |
++-----------------------------------+
+| 19 - Suhani : HIGHER SECOND CLASS |
++-----------------------------------+
+1 row in set (0.04 sec)
+
+Query OK, 1 row affected (0.04 sec)
+
++----------------------------+
+| Result                     |
++----------------------------+
+| 16 - Kartiki : FIRST CLASS |
++----------------------------+
+1 row in set (0.04 sec)
+
+Query OK, 1 row affected (0.04 sec)
+
++---------------------+
+| Result              |
++---------------------+
+| 10 - Shalima : FAIL |
++---------------------+
+1 row in set (0.04 sec)
+
+Query OK, 1 row affected (0.05 sec)
+
++-------------------+
+| Result            |
++-------------------+
+| 20 - Kusum : FAIL |
++-------------------+
+1 row in set (0.05 sec)
+
+Query OK, 1 row affected (0.05 sec)
+
+mysql> SELECT * FROM stud_marks;
+    -> //
++-----------+-------------+
+| name      | total_marks |
++-----------+-------------+
+| SUDARSHAN |        1000 |
+| ARYAN     |         950 |
+| ARJUN     |        1050 |
+| Aanika    |         995 |
+| Suhani    |         889 |
+| Kartiki   |         965 |
+| Shalima   |         400 |
+| Kusum     |         777 |
++-----------+-------------+
+8 rows in set (0.00 sec)
+
+mysql> SELECT * FROM result;//
++-------------+-----------+---------------------+
+| roll_number | name      | class               |
++-------------+-----------+---------------------+
+|          54 | SUDARSHAN | DISTINCTION         |
+|          46 | ARYAN     | FIRST CLASS         |
+|          58 | ARJUN     | DISTINCTION         |
+|          14 | Aanika    | DISTINCTION         |
+|          19 | Suhani    | HIGHER SECOND CLASS |
+|          16 | Kartiki   | FIRST CLASS         |
+|          10 | Shalima   | FAIL                |
+|          20 | Kusum     | FAIL                |
++-------------+-----------+---------------------+
+8 rows in set (0.00 sec)
+
+mysql>
