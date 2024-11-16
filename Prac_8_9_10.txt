@@ -1,0 +1,434 @@
+Microsoft Windows [Version 10.0.22631.4391]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\gaura>monsh
+'monsh' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\gaura>mongosh
+Current Mongosh Log ID: 673482ece0def85b3e7deacf
+Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.0.0
+Using MongoDB:          8.0.3
+Using Mongosh:          2.0.0
+mongosh 2.3.3 is available for download: https://www.mongodb.com/try/download/shell
+
+For mongosh info see: https://docs.mongodb.com/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2024-11-13T16:01:25.684+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+------
+
+test> db.student.find();
+
+test> use gaurav;
+switched to db gaurav
+gaurav> db.student.find();
+
+gaurav> show dbs;
+Gaurav  192.00 KiB
+admin    40.00 KiB
+config   72.00 KiB
+local    72.00 KiB
+gaurav> use Gaurav;
+switched to db Gaurav
+Gaurav>
+
+Gaurav> db.student.find();
+[
+  {
+    _id: ObjectId("67344c01005462105a4dcac4"),
+    studno: 1,
+    studnm: 'gaurav',
+    studage: 20,
+    studmark: 88
+  },
+  {
+    _id: ObjectId("67344ca3005462105a4dcac5"),
+    studno: 2,
+    studnm: 'ABC',
+    studage: 30,
+    studmark: 80
+  },
+  {
+    _id: ObjectId("67344ca4005462105a4dcac6"),
+    studno: 3,
+    studnm: 'vrush',
+    studage: 20,
+    studmark: 92
+  },
+  {
+    _id: ObjectId("67344ca6005462105a4dcac7"),
+    studno: 4,
+    studnm: 'XYZ',
+    studage: 22,
+    studmark: 70
+  }
+]
+Gaurav> db.student.update({'studnm' : 'ABC'},{$set:{'studnm' : 'Hello'}});
+DeprecationWarning: Collection.update() is deprecated. Use updateOne,updateMany, or bulkWrite.
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+Gaurav> db.student.find();
+[
+  {
+    _id: ObjectId("67344c01005462105a4dcac4"),
+    studno: 1,
+    studnm: 'gaurav',
+    studage: 20,
+    studmark: 88
+  },
+  {
+    _id: ObjectId("67344ca3005462105a4dcac5"),
+    studno: 2,
+    studnm: 'Hello',
+    studage: 30,
+    studmark: 80
+  },
+  {
+    _id: ObjectId("67344ca4005462105a4dcac6"),
+    studno: 3,
+    studnm: 'vrush',
+    studage: 20,
+    studmark: 92
+  },
+  {
+    _id: ObjectId("67344ca6005462105a4dcac7"),
+    studno: 4,
+    studnm: 'XYZ',
+    studage: 22,
+    studmark: 70
+  }
+]
+Gaurav> db.student.update({'studage' : 22},$set : {'studage' : 25});
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:40)
+
+> 1 | db.student.update({'studage' : 22},$set : {'studage' : 25});
+    |                                         ^
+  2 |
+
+Gaurav> db.student.update({'studage' : 22},{$set : {'studage' : 25}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+Gaurav> db.student.find();
+[
+  {
+    _id: ObjectId("67344c01005462105a4dcac4"),
+    studno: 1,
+    studnm: 'gaurav',
+    studage: 20,
+    studmark: 88
+  },
+  {
+    _id: ObjectId("67344ca3005462105a4dcac5"),
+    studno: 2,
+    studnm: 'Hello',
+    studage: 30,
+    studmark: 80
+  },
+  {
+    _id: ObjectId("67344ca4005462105a4dcac6"),
+    studno: 3,
+    studnm: 'vrush',
+    studage: 20,
+    studmark: 92
+  },
+  {
+    _id: ObjectId("67344ca6005462105a4dcac7"),
+    studno: 4,
+    studnm: 'XYZ',
+    studage: 25,
+    studmark: 70
+  }
+]
+Gaurav> db.student.remove({'studnm' : 'Hello'});
+DeprecationWarning: Collection.remove() is deprecated. Use deleteOne,deleteMany, findOneAndDelete, or bulkWrite.
+{ acknowledged: true, deletedCount: 1 }
+Gaurav> db.student.find();
+[
+  {
+    _id: ObjectId("67344c01005462105a4dcac4"),
+    studno: 1,
+    studnm: 'gaurav',
+    studage: 20,
+    studmark: 88
+  },
+  {
+    _id: ObjectId("67344ca4005462105a4dcac6"),
+    studno: 3,
+    studnm: 'vrush',
+    studage: 20,
+    studmark: 92
+  },
+  {
+    _id: ObjectId("67344ca6005462105a4dcac7"),
+    studno: 4,
+    studnm: 'XYZ',
+    studage: 25,
+    studmark: 70
+  }
+]
+
+Gaurav> db.student.find({$and:[{'studnm':'vrush'},{'studno':'2'}]});
+
+Gaurav> db.student.find({$and:[{'studnm':'vrush'},{'studno':'3'}]});
+
+Gaurav> db.student.find({$and:[{'studnm':'vrush'},{'studno':'3'}]}).pretty();
+
+Gaurav> db.Student.find({$and:[{"studnm":"vrush"},{"studno":2}]});
+
+Gaurav> db.Student.find({$and:[{"studnm":"vrush"},{"studno":3}]});
+
+Gaurav> db.Student.find({$or:[{"studnm":"vrush"},{"studno":2}]});
+
+Gaurav> db.Student.find({$or:[{"studnm":"vrush"},{"studno":3}]});
+
+Gaurav> db.Student.find({$or:[{"studnm":"vrush"},{"studno":"3"}]});
+
+Gaurav> db.Student.find({$or:[{"studage":"20"},{"studmark":"92"}]});
+
+Gaurav> db.Student.find({$or:[{"studage":"20"},{"studmark":92}]});
+
+Gaurav> db.student.find({$or:[{"studage":20},{"studmark":92}]});
+[
+  {
+    _id: ObjectId("67344c01005462105a4dcac4"),
+    studno: 1,
+    studnm: 'gaurav',
+    studage: 20,
+    studmark: 88
+  },
+  {
+    _id: ObjectId("67344ca4005462105a4dcac6"),
+    studno: 3,
+    studnm: 'vrush',
+    studage: 20,
+    studmark: 92
+  }
+]
+Gaurav> db.student.find({$and:[{"studnm":"vrush"},{"studno":2}]});
+
+Gaurav> db.student.find({$and:[{"studnm":"vrush"},{"studno":3}]});
+[
+  {
+    _id: ObjectId("67344ca4005462105a4dcac6"),
+    studno: 3,
+    studnm: 'vrush',
+    studage: 20,
+    studmark: 92
+  }
+]
+Gaurav> db.student.find({$nor:[{"studnm":"vrush"},{"studno":3}]});
+[
+  {
+    _id: ObjectId("67344c01005462105a4dcac4"),
+    studno: 1,
+    studnm: 'gaurav',
+    studage: 20,
+    studmark: 88
+  },
+  {
+    _id: ObjectId("67344ca6005462105a4dcac7"),
+    studno: 4,
+    studnm: 'XYZ',
+    studage: 25,
+    studmark: 70
+  }
+]
+
+Gaurav> db.student.find({'studno': {$lt : '4'}});
+
+Gaurav> db.student.find({'studno': {$lt : '4'}}).pretty();
+
+Gaurav> db.student.find({'studno': {$lt : 4}}).pretty();
+[
+  {
+    _id: ObjectId("67344c01005462105a4dcac4"),
+    studno: 1,
+    studnm: 'gaurav',
+    studage: 20,
+    studmark: 88
+  },
+  {
+    _id: ObjectId("67344ca4005462105a4dcac6"),
+    studno: 3,
+    studnm: 'vrush',
+    studage: 20,
+    studmark: 92
+  }
+]
+Gaurav> db.student.find({'studage' : {$gte : 20}});
+[
+  {
+    _id: ObjectId("67344c01005462105a4dcac4"),
+    studno: 1,
+    studnm: 'gaurav',
+    studage: 20,
+    studmark: 88
+  },
+  {
+    _id: ObjectId("67344ca4005462105a4dcac6"),
+    studno: 3,
+    studnm: 'vrush',
+    studage: 20,
+    studmark: 92
+  },
+  {
+    _id: ObjectId("67344ca6005462105a4dcac7"),
+    studno: 4,
+    studnm: 'XYZ',
+    studage: 25,
+    studmark: 70
+  }
+]
+
+Gaurav> db.student.find({'studage' : {$gte : 20,$lt : 25}});
+[
+  {
+    _id: ObjectId("67344c01005462105a4dcac4"),
+    studno: 1,
+    studnm: 'gaurav',
+    studage: 20,
+    studmark: 88
+  },
+  {
+    _id: ObjectId("67344ca4005462105a4dcac6"),
+    studno: 3,
+    studnm: 'vrush',
+    studage: 20,
+    studmark: 92
+  }
+]
+Gaurav> db.student.aggregate({$group :{_id: '$studnm','total':{$sum:'$studmark'}}});
+[
+  { _id: 'vrush', total: 92 },
+  { _id: 'XYZ', total: 70 },
+  { _id: 'gaurav', total: 88 }
+]
+Gaurav> db.student.find();
+[
+  {
+    _id: ObjectId("67344c01005462105a4dcac4"),
+    studno: 1,
+    studnm: 'gaurav',
+    studage: 20,
+    studmark: 88
+  },
+  {
+    _id: ObjectId("67344ca4005462105a4dcac6"),
+    studno: 3,
+    studnm: 'vrush',
+    studage: 20,
+    studmark: 92
+  },
+  {
+    _id: ObjectId("67344ca6005462105a4dcac7"),
+    studno: 4,
+    studnm: 'XYZ',
+    studage: 25,
+    studmark: 70
+  }
+]
+Gaurav> db.student.aggregate({$group :{_id: '$studage','total':{$sum:'$studmark'}}});
+[ { _id: 20, total: 180 }, { _id: 25, total: 70 } ]
+Gaurav> db.student.aggregate({group: {id : '$studage', 'total':{$avg:'$studmark'}}})
+MongoServerError: Unrecognized pipeline stage name: 'group'
+Gaurav> db.student.aggregate({$group: {id : '$studage', 'total':{$avg:'$studmark'}}})
+MongoServerError: The field 'id' must be an accumulator object
+Gaurav> db.student.aggregate({$group: {_id : '$studage', 'total':{$avg:'$studmark'}}})
+[ { _id: 20, total: 90 }, { _id: 25, total: 70 } ]
+Gaurav> db.student.aggregate({$group : {_number : '$studage','min': {$min: '$studmark'}}});
+MongoServerError: The field '_number' must be an accumulator object
+Gaurav> db.student.aggregate({$group : {_id : '$studage','min': {$min: '$studmark'}}});
+[ { _id: 20, min: 88 }, { _id: 25, min: 70 } ]
+Gaurav> db.student.aggregate({$group : {_id : '$studage','max': {$max: 'studmark'}}});
+[ { _id: 20, max: 'studmark' }, { _id: 25, max: 'studmark' } ]
+Gaurav> db.student.aggregate({$group : {_id : '$studage','max': {$max: '$studmark'}}});
+[ { _id: 25, max: 70 }, { _id: 20, max: 92 } ]
+Gaurav> db.student.aggregate({$group : {_id : '$studage','max': {$max: 'studmark'}}});
+[ { _id: 20, max: 'studmark' }, { _id: 25, max: 'studmark' } ]
+Gaurav> db.student.aggregate({$group : {_id : '$studage','max': {$max: '$studmark'}}});
+[ { _id: 20, max: 92 }, { _id: 25, max: 70 } ]
+Gaurav> db.student.createIndex({'studno': 1});
+studno_1
+Gaurav> db.studno_1.find();
+
+Gaurav> db.student.getIndexes();
+[
+  { v: 2, key: { _id: 1 }, name: '_id_' },
+  { v: 2, key: { studno: 1 }, name: 'studno_1' }
+]
+Gaurav> db.student.createIndex({'studnm': -1});
+studnm_-1
+
+Gaurav> db.student.getIndexes();
+[
+  { v: 2, key: { _id: 1 }, name: '_id_' },
+  { v: 2, key: { studno: 1 }, name: 'studno_1' },
+  { v: 2, key: { studnm: -1 }, name: 'studnm_-1' }
+]
+Gaurav> db.student.dropIndex({'studnm': -1});
+{ nIndexesWas: 3, ok: 1 }
+Gaurav> db.student.getIndexes();
+[
+  { v: 2, key: { _id: 1 }, name: '_id_' },
+  { v: 2, key: { studno: 1 }, name: 'studno_1' }
+]
+Gaurav> db.student.find();
+[
+  {
+    _id: ObjectId("67344c01005462105a4dcac4"),
+    studno: 1,
+    studnm: 'gaurav',
+    studage: 20,
+    studmark: 88
+  },
+  {
+    _id: ObjectId("67344ca4005462105a4dcac6"),
+    studno: 3,
+    studnm: 'vrush',
+    studage: 20,
+    studmark: 92
+  },
+  {
+    _id: ObjectId("67344ca6005462105a4dcac7"),
+    studno: 4,
+    studnm: 'XYZ',
+    studage: 25,
+    studmark: 70
+  }
+]
+Gaurav> var mapfunction = function(){emit(this.studage,this.studmark)}
+;
+
+Gaurav> var reducefunction = function(key,value){return Array.sum(value);};
+
+Gaurav> db.student.mapreduce(mapfunction, reducefunction, {'out': 'new'});
+TypeError: db.student.mapreduce is not a function
+Gaurav> db.student.mapReduce(mapfunction, reducefunction, {'out': 'new'});
+DeprecationWarning: Collection.mapReduce() is deprecated. Use an aggregation instead.
+See https://docs.mongodb.com/manual/core/map-reduce for details.
+{ result: 'new', ok: 1 }
+Gaurav> db.new.find();
+[ { _id: 20, value: 180 }, { _id: 25, value: 70 } ]
+Gaurav> var mapfunction = function(){emit(this.studage,this.studmark)}
+;
+
+Gaurav> var reducefunction = function(key,value){return Array.avg(value);};
+
+Gaurav> db.student.mapReduce(mapfunction,reducefunction,{'out': 'result'});
+{ result: 'result', ok: 1 }
+Gaurav> db.result.find();
+[ { _id: 20, value: 90 }, { _id: 25, value: 70 } ]
+Gaurav>
