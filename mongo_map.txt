@@ -1,0 +1,206 @@
+Microsoft Windows [Version 10.0.22631.4391]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\gaura>mongosh;
+Current Mongosh Log ID: 67344b06005462105a4dcac3
+Connecting to:          mongodb://127.0.0.1:27017/%3B?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.0.0
+Using MongoDB:          8.0.3
+Using Mongosh:          2.0.0
+mongosh 2.3.3 is available for download: https://www.mongodb.com/try/download/shell
+
+For mongosh info see: https://docs.mongodb.com/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2024-11-13T12:09:04.510+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+------
+
+;> show dbs;
+admin   40.00 KiB
+config  60.00 KiB
+local   40.00 KiB
+;> use Gaurav
+switched to db Gaurav
+Gaurav> db.createcollection('student');
+TypeError: db.createcollection is not a function
+Gaurav> db.createCollection('student');
+{ ok: 1 }
+Gaurav> db.student.insert({'studno' : 1, 'studnm' : 'gaurav', 'studage' : 20, 'studmark' : 88});
+DeprecationWarning: Collection.insert() is deprecated. Use insertOne, insertMany, or bulkWrite.
+{
+  acknowledged: true,
+  insertedIds: { '0': ObjectId("67344c01005462105a4dcac4") }
+}
+Gaurav> db.student.find();
+[
+  {
+    _id: ObjectId("67344c01005462105a4dcac4"),
+    studno: 1,
+    studnm: 'gaurav',
+    studage: 20,
+    studmark: 88
+  }
+]
+Gaurav> db.student.insert({'studno' : 2, 'studnm' : 'ABC', 'studage' : 30, 'studmark' : 80});
+{
+  acknowledged: true,
+  insertedIds: { '0': ObjectId("67344ca3005462105a4dcac5") }
+}
+Gaurav> db.student.insert({'studno' : 3, 'studnm' : 'vrush', 'studage' : 20, 'studmark' : 92});
+{
+  acknowledged: true,
+  insertedIds: { '0': ObjectId("67344ca4005462105a4dcac6") }
+}
+Gaurav> db.student.insert({'studno' : 4, 'studnm' : 'XYZ', 'studage' : 22, 'studmark' : 70});
+{
+  acknowledged: true,
+  insertedIds: { '0': ObjectId("67344ca6005462105a4dcac7") }
+}
+Gaurav> db.student.find();
+[
+  {
+    _id: ObjectId("67344c01005462105a4dcac4"),
+    studno: 1,
+    studnm: 'gaurav',
+    studage: 20,
+    studmark: 88
+  },
+  {
+    _id: ObjectId("67344ca3005462105a4dcac5"),
+    studno: 2,
+    studnm: 'ABC',
+    studage: 30,
+    studmark: 80
+  },
+  {
+    _id: ObjectId("67344ca4005462105a4dcac6"),
+    studno: 3,
+    studnm: 'vrush',
+    studage: 20,
+    studmark: 92
+  },
+  {
+    _id: ObjectId("67344ca6005462105a4dcac7"),
+    studno: 4,
+    studnm: 'XYZ',
+    studage: 22,
+    studmark: 70
+  }
+]
+Gaurav> db.student.find().pretty();
+[
+  {
+    _id: ObjectId("67344c01005462105a4dcac4"),
+    studno: 1,
+    studnm: 'gaurav',
+    studage: 20,
+    studmark: 88
+  },
+  {
+    _id: ObjectId("67344ca3005462105a4dcac5"),
+    studno: 2,
+    studnm: 'ABC',
+    studage: 30,
+    studmark: 80
+  },
+  {
+    _id: ObjectId("67344ca4005462105a4dcac6"),
+    studno: 3,
+    studnm: 'vrush',
+    studage: 20,
+    studmark: 92
+  },
+  {
+    _id: ObjectId("67344ca6005462105a4dcac7"),
+    studno: 4,
+    studnm: 'XYZ',
+    studage: 22,
+    studmark: 70
+  }
+]
+Gaurav> var mapfunction = function(){emit(this.age,this.mark)};
+
+Gaurav> var reducefunction = function(key,value){return Array.sum(value)};
+
+Gaurav> db.student.mapReduce(mapfunction,reducefunction,{'out' : 'result'});
+DeprecationWarning: Collection.mapReduce() is deprecated. Use an aggregation instead.
+See https://docs.mongodb.com/manual/core/map-reduce for details.
+{ result: 'result', ok: 1 }
+Gaurav> db.result.find();
+[ { _id: null, value: NaN } ]
+Gaurav> var reducefunction = function(key,value){return Array.sum(value);};
+
+Gaurav> db.student.mapReduce(mapfunction,reducefunction,{'out' : 'result'});
+{ result: 'result', ok: 1 }
+Gaurav> db.result.find();
+[ { _id: null, value: NaN } ]
+Gaurav> var mapfunction=function(){ emit(this.age,this.marks)};
+
+Gaurav> var reducefunction=function(key,value){return Array.sum(value);};
+
+Gaurav> db.student.mapReduce(mapfunction,reducefunction, {'out':'new'});
+{ result: 'new', ok: 1 }
+Gaurav> db.new.find();
+[ { _id: null, value: NaN } ]
+Gaurav> var mapfunction = function(){emit(this.age , this.mark)};
+
+Gaurav>
+
+Gaurav>  var reducefunction = function(key , value){return Array.sum(value)};
+
+Gaurav>
+
+Gaurav>   db.student.mapReduce(mapfunction , reducefunction,{'out' : 'total'});
+{ result: 'total', ok: 1 }
+Gaurav>  db.total.find();
+[ { _id: null, value: NaN } ]
+Gaurav> db.student.find();
+[
+  {
+    _id: ObjectId("67344c01005462105a4dcac4"),
+    studno: 1,
+    studnm: 'gaurav',
+    studage: 20,
+    studmark: 88
+  },
+  {
+    _id: ObjectId("67344ca3005462105a4dcac5"),
+    studno: 2,
+    studnm: 'ABC',
+    studage: 30,
+    studmark: 80
+  },
+  {
+    _id: ObjectId("67344ca4005462105a4dcac6"),
+    studno: 3,
+    studnm: 'vrush',
+    studage: 20,
+    studmark: 92
+  },
+  {
+    _id: ObjectId("67344ca6005462105a4dcac7"),
+    studno: 4,
+    studnm: 'XYZ',
+    studage: 22,
+    studmark: 70
+  }
+]
+Gaurav>
+
+Gaurav> var mapfunction = function(){emit(this.studage , this.studmark)};
+
+Gaurav>
+
+Gaurav>  var reducefunction = function(key , value){return Array.sum(value)};
+
+Gaurav>
+
+Gaurav>   db.student.mapReduce(mapfunction , reducefunction,{'out' : 'total'});
+{ result: 'total', ok: 1 }
+Gaurav>  db.total.find();
+[
+  { _id: 20, value: 180 },
+  { _id: 30, value: 80 },
+  { _id: 22, value: 70 }
+]
+Gaurav>
